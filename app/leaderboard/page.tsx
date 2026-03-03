@@ -83,7 +83,8 @@ export default function Leaderboard() {
     }
   }
 
-  // Генерируем моковые данные, если список пуст (для демо)
+  // Генерируем моковые данные, если список пуст (для демо) - ОТКЛЮЧЕНО ПО ТРЕБОВАНИЮ ЗАКАЗЧИКА
+  /*
   if (leaderboardData.length < 5) {
     const mockUsers = [
         { wallet: "0x71C...9A21", xp: 15420.50, level: 5 },
@@ -99,6 +100,7 @@ export default function Leaderboard() {
         }
     })
   }
+  */
 
   // Сортируем после всех манипуляций
   const sortedData = [...leaderboardData]
