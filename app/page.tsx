@@ -57,17 +57,6 @@ export default function Home() {
     }
   }, [isConnected, address])
 
-  // Сохраняем прогресс XP в localStorage каждые 5 секунд
-  useEffect(() => {
-    if (isConnected && address && totalAccruedXp > 0) {
-      const interval = setInterval(() => {
-        localStorage.setItem(`totalXp_${address}`, totalAccruedXp.toString())
-        localStorage.setItem(`level_${address}`, levelInfo.level.toString())
-      }, 5000)
-      return () => clearInterval(interval)
-    }
-  }, [isConnected, address, totalAccruedXp, levelInfo.level])
-
   // Таймер обратного отсчета для следующего бонуса
   const [timeLeft, setTimeLeft] = useState('')
   useEffect(() => {
@@ -141,6 +130,41 @@ export default function Home() {
     }
   })
 
+  // Merge tokens with activation data
+  const mergedTokens = tokens?.map(token => {
+    const activation = activations?.find(a => a.token_symbol === token.symbol)
+    const isAutoActivated = token.formattedBalance > 0
+    const activatedAt = activation?.activated_at || sessionStartTime
+    const accruedXp = isAutoActivated ? calculateAccruedXp(activatedAt, token.dailyXp) : 0
+    
+    return {
+      ...token,
+      isActivated: isAutoActivated,
+      accruedXp,
+      activationDate: activatedAt
+    }
+  })
+
+  // Рассчитываем общие статы
+  const totalValue = mergedTokens?.reduce((acc, t) => acc + t.value, 0) || 0
+  const dailyXpRate = mergedTokens?.reduce((acc, t) => acc + (t.isActivated ? t.dailyXp : 0), 0) || 0
+  const totalAccruedXp = mergedTokens?.reduce((acc, t) => acc + t.accruedXp, 0) || 0
+
+  // Расчет уровня и достижений
+  const levelInfo = calculateLevel(totalAccruedXp)
+  const unlockedAchievements = checkAchievements(mergedTokens || [], activations)
+
+  // Сохраняем прогресс XP в localStorage каждые 5 секунд
+  useEffect(() => {
+    if (isConnected && address && totalAccruedXp > 0) {
+      const interval = setInterval(() => {
+        localStorage.setItem(`totalXp_${address}`, totalAccruedXp.toString())
+        localStorage.setItem(`level_${address}`, levelInfo.level.toString())
+      }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [isConnected, address, totalAccruedXp, levelInfo.level])
+
   if (!isConnected) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 text-white relative overflow-hidden bg-transparent selection:bg-blue-500/30">
@@ -186,30 +210,6 @@ export default function Home() {
       </div>
     )
   }
-
-  // Merge tokens with activation data
-  const mergedTokens = tokens?.map(token => {
-    const activation = activations?.find(a => a.token_symbol === token.symbol)
-    const isAutoActivated = token.formattedBalance > 0
-    const activatedAt = activation?.activated_at || sessionStartTime
-    const accruedXp = isAutoActivated ? calculateAccruedXp(activatedAt, token.dailyXp) : 0
-    
-    return {
-      ...token,
-      isActivated: isAutoActivated,
-      accruedXp,
-      activationDate: activatedAt
-    }
-  })
-
-  // Рассчитываем общие статы
-  const totalValue = mergedTokens?.reduce((acc, t) => acc + t.value, 0) || 0
-  const dailyXpRate = mergedTokens?.reduce((acc, t) => acc + (t.isActivated ? t.dailyXp : 0), 0) || 0
-  const totalAccruedXp = mergedTokens?.reduce((acc, t) => acc + t.accruedXp, 0) || 0
-
-  // Расчет уровня и достижений
-  const levelInfo = calculateLevel(totalAccruedXp)
-  const unlockedAchievements = checkAchievements(mergedTokens || [], activations)
 
   return (
     <div className="min-h-screen bg-transparent text-white p-4 md:p-8 font-sans relative overflow-x-hidden selection:bg-blue-500/30">
