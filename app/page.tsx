@@ -9,7 +9,7 @@ import { calculateLevel } from '@/lib/levelCalculator'
 import { checkAchievements, Achievement } from '@/lib/achievements'
 import { checkDailyStreak, WEEKLY_STREAK_REWARDS } from '@/lib/dailyStreak'
 import { WalletConnect } from '@/components/WalletConnect'
-import { Loader2, TrendingUp, DollarSign, Wallet, ArrowRight, Activity, Zap, Info, X, Star, Gift } from 'lucide-react'
+import { Loader2, TrendingUp, DollarSign, Wallet, ArrowRight, Activity, Zap, Info, X, Star, Gift, ShoppingCart } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -167,6 +167,15 @@ export default function Home() {
             <h1 className="text-3xl font-black tracking-tighter italic">DomaDrip</h1>
         </div>
         <div className="flex items-center gap-4">
+          <a 
+            href="https://app.doma.xyz/join/puot3uu3rzm4m"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2 text-sm font-black border border-blue-500/30 uppercase tracking-widest"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Get Tokens
+          </a>
           <Link 
             href="/leaderboard"
             className="px-4 py-2 hover:bg-gray-800/50 rounded-lg text-gray-300 hover:text-white transition-colors flex items-center gap-2 text-sm font-black border border-gray-800 uppercase tracking-widest"

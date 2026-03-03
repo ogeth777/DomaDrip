@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getAllActivations, getActivations } from '@/lib/supabase'
 import { calculateAccruedXp, calculateDailyXp } from '@/lib/xpCalculator'
 import { calculateLevel } from '@/lib/levelCalculator'
-import { Loader2, Search, Trophy, ArrowLeft, User, Star, Gift } from 'lucide-react'
+import { Loader2, Search, Trophy, ArrowLeft, User, Star, Gift, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useAccount } from 'wagmi'
@@ -110,6 +110,15 @@ export default function Leaderboard() {
             </div>
             
             <div className="flex items-center gap-4">
+              <a 
+                href="https://app.doma.xyz/join/puot3uu3rzm4m"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2 text-sm font-black border border-blue-500/30 uppercase tracking-widest"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Get Tokens
+              </a>
               <button className="px-4 py-2 bg-gray-800/30 rounded-lg text-gray-600 text-sm font-black border border-gray-700 cursor-not-allowed flex items-center gap-2 uppercase tracking-widest">
                 <Gift className="w-4 h-4" />
                 Airdrop
