@@ -554,11 +554,11 @@ export default function Home() {
               </li>
               <li className="flex items-center gap-4 text-gray-300 font-bold">
                 <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 text-[10px]">✓</div>
-                Leveling System
+                Season 0 (Genesis)
               </li>
               <li className="flex items-center gap-4 text-gray-300 font-bold">
                 <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 text-[10px]">✓</div>
-                Daily Rewards
+                Live XP Farming
               </li>
             </ul>
           </motion.div>
@@ -577,11 +577,11 @@ export default function Home() {
             <ul className="space-y-5 text-sm">
               <li className="flex items-center gap-4 text-gray-400 font-bold italic">
                 <div className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 text-[10px] animate-pulse">●</div>
-                Season 1 Launch
+                Season 0 Airdrop
               </li>
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
-                Asset Expansion
+                Season 1 Launch
               </li>
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
