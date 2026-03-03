@@ -123,6 +123,17 @@ export default function Home() {
     enabled: !!address,
   })
 
+  // State to persist XP from LocalStorage across reloads
+  const [storedXp, setStoredXp] = useState(0)
+
+  // Initialize stored XP on mount
+  useEffect(() => {
+    if (isConnected && address) {
+      const saved = parseFloat(localStorage.getItem(`totalXp_${address}`) || '0')
+      if (saved > 0) setStoredXp(saved)
+    }
+  }, [isConnected, address])
+
   const activateMutation = useMutation({
     mutationFn: activateToken,
     onSuccess: () => {
@@ -148,7 +159,10 @@ export default function Home() {
   // Рассчитываем общие статы
   const totalValue = mergedTokens?.reduce((acc, t) => acc + t.value, 0) || 0
   const dailyXpRate = mergedTokens?.reduce((acc, t) => acc + (t.isActivated ? t.dailyXp : 0), 0) || 0
-  const totalAccruedXp = mergedTokens?.reduce((acc, t) => acc + t.accruedXp, 0) || 0
+  const calculatedXp = mergedTokens?.reduce((acc, t) => acc + t.accruedXp, 0) || 0
+  
+  // Use the maximum of calculated vs stored to prevent reset on F5
+  const totalAccruedXp = Math.max(calculatedXp, storedXp)
 
   // Расчет уровня и достижений
   const levelInfo = calculateLevel(totalAccruedXp)
@@ -240,16 +254,24 @@ export default function Home() {
             </div>
             <h1 className="text-3xl font-black tracking-tighter italic">DomaDrip</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://app.doma.xyz/join/puot3uu3rzm4m"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2 text-sm font-black border border-blue-500/30 uppercase tracking-widest"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            Get Tokens
-          </a>
+          <div className="flex items-center gap-4">
+              <a 
+                href="https://x.com/DomaDrip" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-black/40 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-all border border-gray-800 hover:border-blue-500/30"
+              >
+                  <X className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://app.doma.xyz/join/puot3uu3rzm4m"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2 text-sm font-black border border-blue-500/30 uppercase tracking-widest"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Get Tokens
+              </a>
           <Link 
             href="/leaderboard"
             className="px-4 py-2 hover:bg-gray-800/50 rounded-lg text-gray-300 hover:text-white transition-colors flex items-center gap-2 text-sm font-black border border-gray-800 uppercase tracking-widest"
