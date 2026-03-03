@@ -604,11 +604,11 @@ export default function Home() {
             <ul className="space-y-5 text-sm">
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
-                $DRIP Governance
+                Governance
               </li>
               <li className="flex items-center gap-4 font-black text-white bg-purple-500/5 py-2 px-3 rounded-xl border border-purple-500/10 -ml-3">
                 <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-[10px] shadow-lg shadow-purple-500/50">★</div>
-                AIRDROP EVENT
+                SEASON 0 (GENESIS)
               </li>
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
