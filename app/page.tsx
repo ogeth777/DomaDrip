@@ -532,7 +532,7 @@ export default function Home() {
           <p className="text-blue-500 uppercase tracking-[0.4em] text-[10px] font-black">Strategic Development Roadmap</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative max-w-5xl mx-auto">
           {/* Connection Line (Desktop) */}
           <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent -translate-y-1/2 z-0" />
 
@@ -586,33 +586,6 @@ export default function Home() {
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
                 Referral Network
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Phase 3 */}
-          <motion.div 
-            whileHover={{ y: -10, borderColor: 'rgba(168, 85, 247, 0.4)' }} 
-            className="bg-[#111]/80 backdrop-blur-xl p-10 rounded-[2.5rem] border border-gray-800/50 text-left relative z-10 shadow-2xl transition-all group overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-purple-500/10 transition-colors" />
-            <div className="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/20 group-hover:scale-110 transition-transform">
-              <Gift className="w-7 h-7 text-purple-500" />
-            </div>
-            <div className="text-purple-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">Phase 03</div>
-            <h3 className="text-3xl font-black mb-6 tracking-tight">Ecosystem</h3>
-            <ul className="space-y-5 text-sm">
-              <li className="flex items-center gap-4 text-gray-400 font-medium">
-                <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
-                Governance
-              </li>
-              <li className="flex items-center gap-4 font-black text-white bg-purple-500/5 py-2 px-3 rounded-xl border border-purple-500/10 -ml-3">
-                <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-[10px] shadow-lg shadow-purple-500/50">★</div>
-                SEASON 0 (GENESIS)
-              </li>
-              <li className="flex items-center gap-4 text-gray-400 font-medium">
-                <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
-                DAO Integration
               </li>
             </ul>
           </motion.div>
