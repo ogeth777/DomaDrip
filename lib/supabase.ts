@@ -1,9 +1,11 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase: SupabaseClient | null = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null
 
 export interface Activation {
   wallet: string
@@ -16,6 +18,7 @@ export interface Activation {
 }
 
 export async function getActivations(wallet: string) {
+  if (!supabase) return []
   try {
     const { data, error } = await supabase
         .from('activations')
@@ -23,8 +26,6 @@ export async function getActivations(wallet: string) {
         .eq('wallet', wallet)
     
     if (error) {
-        // Suppress console error if it's just connection issue in dev
-        // console.error('Error fetching activations:', error)
         return []
     }
     return data as Activation[]
@@ -34,6 +35,7 @@ export async function getActivations(wallet: string) {
 }
 
 export async function activateToken(activation: Omit<Activation, 'current_xp' | 'activated_at'>) {
+    if (!supabase) return null
     // Check if user exists, if not create
     const { error: userError } = await supabase
         .from('users')
@@ -55,13 +57,13 @@ export async function activateToken(activation: Omit<Activation, 'current_xp' | 
 }
 
 export async function getAllActivations() {
+  if (!supabase) return []
   try {
     const { data, error } = await supabase
       .from('activations')
       .select('*')
     
     if (error) {
-      // Suppress console error in dev/if table doesn't exist
       return []
     }
     return data
