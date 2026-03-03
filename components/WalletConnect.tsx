@@ -15,31 +15,34 @@ export function WalletConnect() {
 
   const isWrongChain = isConnected && chainId !== doma.id
 
-  // Автоматическое переключение сети при подключении, если она неверная
-  useEffect(() => {
-    if (isWrongChain && switchChain) {
-      switchChain({ chainId: doma.id })
-    }
-  }, [isWrongChain, switchChain])
-
   if (isConnected) {
-    return (
-      <div className="flex items-center gap-4">
-        {isWrongChain ? (
+    if (isWrongChain) {
+      return (
+        <div className="flex items-center gap-4">
           <button
-            onClick={() => switchChain?.({ chainId: doma.id })}
+            onClick={() => switchChain({ chainId: doma.id })}
             disabled={isSwitching}
-            className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-medium"
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-all flex items-center gap-2 shadow-lg shadow-red-900/20 animate-pulse"
           >
             {isSwitching ? <Loader2 className="w-4 h-4 animate-spin" /> : <AlertCircle className="w-4 h-4" />}
-            Switch to Doma
+            Wrong Network: Switch to Doma
           </button>
-        ) : (
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <button
+            onClick={() => disconnect()}
+            className="px-3 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-colors text-xs font-medium border border-gray-700"
+          >
+            Disconnect
+          </button>
+        </div>
+      )
+    }
+
+    return (
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
              <span className="text-xs font-mono text-blue-400">Doma Mainnet</span>
-          </div>
-        )}
+        </div>
         
         <div className="flex items-center gap-3">
             <span className="text-sm font-mono text-gray-400">
