@@ -165,6 +165,25 @@ export default function Home() {
     }
   }, [isConnected, address, totalAccruedXp, levelInfo.level])
 
+  // Автоматическая активация токенов в Supabase, если их там еще нет
+  useEffect(() => {
+    if (isConnected && address && tokens && activations && !isActivationsLoading) {
+      tokens.forEach(token => {
+        if (token.formattedBalance > 0) {
+          const isActivatedInDb = activations.some(a => a.token_symbol === token.symbol)
+          if (!isActivatedInDb) {
+            activateMutation.mutate({
+              wallet: address,
+              token_symbol: token.symbol,
+              balance_at_activation: parseFloat(token.formattedBalance.toString()),
+              price_at_activation: token.price
+            })
+          }
+        }
+      })
+    }
+  }, [isConnected, address, tokens, activations, isActivationsLoading])
+
   if (!isConnected) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 text-white relative overflow-hidden bg-transparent selection:bg-blue-500/30">
