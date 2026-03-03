@@ -44,10 +44,12 @@ export default function Leaderboard() {
       return acc
     }, {} as Record<string, number>)
   ).map(([wallet, xp]) => {
-    const levelInfo = calculateLevel(xp)
+    // Explicitly cast xp to number to avoid 'unknown' error
+    const xpValue = xp as number
+    const levelInfo = calculateLevel(xpValue)
     return {
       wallet,
-      xp,
+      xp: xpValue,
       level: levelInfo.level
     }
   }) : []
