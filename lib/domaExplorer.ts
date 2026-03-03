@@ -76,11 +76,11 @@ export async function fetchUserTokens(address: string): Promise<EnrichedToken[]>
     // console.warn("Explorer API failed, relying on direct blockchain reads")
   }
 
+  const symbols = Object.keys(TOP_TOKEN_PRICES)
+
   try {
     const userBalanceMap = new Map<string, Token>()
     userTokens.forEach(t => userBalanceMap.set(t.symbol, t))
-
-    const symbols = Object.keys(TOP_TOKEN_PRICES)
 
     // Читаем балансы индивидуально через readContract, так как Multicall может не поддерживаться RPC
     const supportedTokens = await Promise.all(symbols.map(async symbol => {
