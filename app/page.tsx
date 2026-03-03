@@ -41,24 +41,79 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [])
 
-  // Проверка ежедневного бонуса при монтировании компонента
+  // Инициализация состояния из localStorage
   useEffect(() => {
     if (isConnected && address) {
       const lastClaimed = localStorage.getItem(`lastClaimed_${address}`)
       const currentStreak = parseInt(localStorage.getItem(`currentStreak_${address}`) || '0')
+      
+      // Загружаем сохраненный XP (если есть)
+      // В реальном приложении это должно приходить с бэкенда, но для демо сохраняем локально
+      const savedXp = parseFloat(localStorage.getItem(`totalXp_${address}`) || '0')
+      
       const info = checkDailyStreak(lastClaimed, currentStreak)
       setStreakInfo(info)
+      setStreak(currentStreak)
     }
   }, [isConnected, address])
+
+  // Сохраняем прогресс XP в localStorage каждые 5 секунд
+  useEffect(() => {
+    if (isConnected && address && totalAccruedXp > 0) {
+      const interval = setInterval(() => {
+        localStorage.setItem(`totalXp_${address}`, totalAccruedXp.toString())
+        localStorage.setItem(`level_${address}`, levelInfo.level.toString())
+      }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [isConnected, address, totalAccruedXp, levelInfo.level])
+
+  // Таймер обратного отсчета для следующего бонуса
+  const [timeLeft, setTimeLeft] = useState('')
+  useEffect(() => {
+    if (!streakInfo.canClaim && address) {
+      const lastClaimed = localStorage.getItem(`lastClaimed_${address}`)
+      if (lastClaimed) {
+        const interval = setInterval(() => {
+          const now = new Date()
+          const lastDate = new Date(lastClaimed)
+          const nextDate = new Date(lastDate)
+          nextDate.setDate(nextDate.getDate() + 1)
+          
+          const diff = nextDate.getTime() - now.getTime()
+          
+          if (diff <= 0) {
+            setTimeLeft('')
+            // Обновляем состояние, если время вышло
+            const currentStreak = parseInt(localStorage.getItem(`currentStreak_${address}`) || '0')
+            setStreakInfo(checkDailyStreak(lastClaimed, currentStreak))
+          } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60))
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+            setTimeLeft(`${hours}h ${minutes}m ${seconds}s`)
+          }
+        }, 1000)
+        return () => clearInterval(interval)
+      }
+    }
+  }, [streakInfo.canClaim, address])
 
   const handleClaimXp = () => {
     if (!streakInfo.canClaim || !address) return;
 
-    localStorage.setItem(`lastClaimed_${address}`, new Date().toISOString())
-    localStorage.setItem(`currentStreak_${address}`, streakInfo.streakDay.toString())
+    const now = new Date().toISOString()
+    localStorage.setItem(`lastClaimed_${address}`, now)
+    // Увеличиваем стрик только если это следующий день, иначе сбрасываем или оставляем 1
+    const newStreak = streakInfo.streakDay
+    localStorage.setItem(`currentStreak_${address}`, newStreak.toString())
+    
+    // Добавляем бонусный XP к сохраненному
+    const currentTotalXp = parseFloat(localStorage.getItem(`totalXp_${address}`) || '0')
+    localStorage.setItem(`totalXp_${address}`, (currentTotalXp + streakInfo.reward).toString())
     
     setShowStreakBonus(true)
-    setStreak(streakInfo.streakDay)
+    setStreak(newStreak)
     setStreakInfo({
       ...streakInfo,
       canClaim: false
@@ -274,7 +329,10 @@ export default function Home() {
                           />
                         </>
                     ) : (
-                        <span className="opacity-50 italic">Claimed</span>
+                        <div className="flex flex-col items-center leading-none">
+                          <span className="opacity-50 italic text-[10px]">Next Bonus in</span>
+                          <span className="font-mono text-xs text-pink-400">{timeLeft || "24h 00m"}</span>
+                        </div>
                     )}
                 </button>
             </div>

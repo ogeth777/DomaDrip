@@ -58,24 +58,46 @@ export default function Leaderboard() {
   if (address && isConnected) {
     const userIndex = leaderboardData.findIndex(item => item.wallet.toLowerCase() === address.toLowerCase())
     
-    // Рассчитываем текущий XP пользователя из его токенов
-    const userCurrentXp = userTokens?.reduce((acc, token) => {
+    // Пытаемся получить сохраненный XP из localStorage (более точный)
+    const savedXp = parseFloat(localStorage.getItem(`totalXp_${address}`) || '0')
+    
+    // Рассчитываем текущий XP пользователя из его токенов (как запасной вариант)
+    const calculatedXp = userTokens?.reduce((acc, token) => {
         if (token.formattedBalance > 0) {
-            // Считаем от начала сессии (как на Dashboard)
-            const sessionStart = new Date().toISOString() // Упрощенно для лидерборда
+            const sessionStart = new Date().toISOString() 
             return acc + calculateAccruedXp(sessionStart, token.dailyXp)
         }
         return acc
     }, 0) || 0
 
+    // Используем максимальное значение (чтобы не было отката назад)
+    const finalUserXp = Math.max(savedXp, calculatedXp)
+
     if (userIndex === -1) {
-        const levelInfo = calculateLevel(userCurrentXp)
-        leaderboardData.push({ wallet: address, xp: userCurrentXp, level: levelInfo.level })
+        const levelInfo = calculateLevel(finalUserXp)
+        leaderboardData.push({ wallet: address, xp: finalUserXp, level: levelInfo.level })
     } else {
-        // Если он есть в БД, прибавляем то что накапало сейчас (для демо)
-        leaderboardData[userIndex].xp += userCurrentXp
+        // Если он есть в БД, обновляем его данные
+        leaderboardData[userIndex].xp = Math.max(leaderboardData[userIndex].xp, finalUserXp)
         leaderboardData[userIndex].level = calculateLevel(leaderboardData[userIndex].xp).level
     }
+  }
+
+  // Генерируем моковые данные, если список пуст (для демо)
+  if (leaderboardData.length < 5) {
+    const mockUsers = [
+        { wallet: "0x71C...9A21", xp: 15420.50, level: 5 },
+        { wallet: "0x3D2...B1C9", xp: 12300.10, level: 4 },
+        { wallet: "0xA9F...4D5E", xp: 9850.75, level: 4 },
+        { wallet: "0xB21...8F0A", xp: 7600.25, level: 3 },
+        { wallet: "0xC44...E2B1", xp: 5400.00, level: 2 },
+    ]
+    // Добавляем только тех, кого нет
+    mockUsers.forEach(mock => {
+        if (!leaderboardData.some(u => u.wallet === mock.wallet)) {
+            leaderboardData.push(mock)
+        }
+    })
   }
 
   // Сортируем после всех манипуляций
