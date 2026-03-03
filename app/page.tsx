@@ -585,6 +585,10 @@ export default function Home() {
               </li>
               <li className="flex items-center gap-4 text-gray-400 font-medium">
                 <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
+                Expanded Token Support
+              </li>
+              <li className="flex items-center gap-4 text-gray-400 font-medium">
+                <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-gray-600 text-[10px]">○</div>
                 Referral Network
               </li>
             </ul>
