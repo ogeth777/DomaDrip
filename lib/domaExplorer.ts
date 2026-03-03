@@ -1,4 +1,4 @@
-import { formatUnits, getAddress, parseAbi, ContractFunctionResult } from 'viem'
+import { formatUnits, getAddress, parseAbi } from 'viem'
 import { calculateDailyXp } from './xpCalculator'
 import { config, doma } from '@/config/wagmi'
 import { readContract, multicall } from '@wagmi/core'
